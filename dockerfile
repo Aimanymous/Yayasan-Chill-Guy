@@ -1,6 +1,10 @@
 # Use nginx as base image
 FROM nginx:alpine
 
+# Set environment variables
+ARG PORT=80
+ENV PORT=$PORT
+
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*
 
@@ -9,8 +13,11 @@ COPY index.html /usr/share/nginx/html/
 COPY styles.css /usr/share/nginx/html/
 COPY script.js /usr/share/nginx/html/
 
-# Expose port 80
-EXPOSE 80
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port from environment variable
+EXPOSE ${PORT}
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
