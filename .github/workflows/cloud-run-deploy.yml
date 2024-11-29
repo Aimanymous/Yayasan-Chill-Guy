@@ -49,7 +49,6 @@ jobs:
           region: ${{ env.REGION }}
           image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
           env_vars: |
-            PORT=${{ env.PORT }}
             NODE_ENV=${{ env.NODE_ENV }}
           flags: '--allow-unauthenticated'
           
