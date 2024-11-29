@@ -93,7 +93,7 @@ body {
   
   div.equal {
     display: inline-block;
-    border: 1px solid #edbb30;
+    border: 1px solid #bd04bd;
     border-radius: 1px;
     width: 17%;
     text-align: center;
@@ -102,7 +102,7 @@ body {
     vertical-align: top;
     cursor: pointer;
     color: #FFF;
-    background-color: #fef24d;
+    background-color: #c109da;
     transition: all .2s ease-in-out;
   }
   
