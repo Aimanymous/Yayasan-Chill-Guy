@@ -93,7 +93,7 @@ body {
   
   div.equal {
     display: inline-block;
-    border: 1px solid #3079ED;
+    border: 1px solid #edbb30;
     border-radius: 1px;
     width: 17%;
     text-align: center;
@@ -102,12 +102,12 @@ body {
     vertical-align: top;
     cursor: pointer;
     color: #FFF;
-    background-color: #4d90fe;
+    background-color: #fef24d;
     transition: all .2s ease-in-out;
   }
   
   div.equal:hover {
-    background-color: #307CF9;
+    background-color: #f9db30;
     -webkit-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
     border-color: #1857BB;
