@@ -17,7 +17,7 @@ COPY script.js /usr/share/nginx/html/
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port from environment variable
-EXPOSE ${PORT}
+EXPOSE 8080
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
