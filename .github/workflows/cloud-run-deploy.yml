@@ -12,7 +12,7 @@ env:
   PROJECT_ID: chillguys
   REGION: asia-southeast1
   SERVICE_NAME: calculator-app
-  PORT: 8080
+  PORT: 80
   NODE_ENV: production
 
 jobs:
@@ -51,5 +51,3 @@ jobs:
           env_vars: |
             NODE_ENV=${{ env.NODE_ENV }}
           flags: '--allow-unauthenticated'
-          
-          
