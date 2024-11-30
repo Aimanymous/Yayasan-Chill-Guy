@@ -36,11 +36,11 @@ jobs:
       # Step 3: Pull the latest changes from the Git repository on the Droplet
       - name: Pull latest code and rebuild Docker container
         run: |
-          ssh -o StrictHostKeyChecking=no username@your-droplet-ip << 'EOF'
-            cd my-docker-app/Yayasan-Chill-Guy
-            git pull origin main  # Pull the latest changes
-            docker build -t my-website .  # Rebuild Docker image
-            docker stop $(docker ps -q --filter ancestor=my-website)  # Stop the old container
-            docker rm $(docker ps -a -q --filter ancestor=my-website)  # Remove old container
-            docker run -d -p 80:80 my-website  # Start the new container
+          ssh -o StrictHostKeyChecking=no root@134.209.112.240 << 'EOF'
+            cd docker-app/Yayasan-Chill-Guy
+            git pull origin dev/davey  # Pull the latest changes
+            docker build -t dvy4/basiccalculator2 .  # Rebuild Docker image
+            docker stop $(docker ps -q --filter ancestor=dvy4/basiccalculator2)  # Stop the old container
+            docker rm $(docker ps -a -q --filter ancestor=dvy4/basiccalculator2)  # Remove old container
+            docker run -d -p 80:80 dvy4/basiccalculator2  # Start the new container
           EOF
