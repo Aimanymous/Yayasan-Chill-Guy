@@ -39,7 +39,7 @@ jobs:
           command_timeout: 30m
           script: | 
             echo "Connecting to ${{ env.HOST }}..."
-            echo "${{ secrets.SSH_PRIVATE_KEY }}"
+            echo "${{ env.DUMMY_SSH_KEY }}"
 
       # Step 3: Pull the latest changes from the Git repository on the Droplet
       - name: Pull latest code and rebuild Docker container
