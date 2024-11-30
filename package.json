@@ -4,7 +4,7 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "test": "jest"
+    "test": "npm install -g jest && jest --verbose --logHeapUsage"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +18,6 @@
   },
   "dependencies": {
     "jsdom": "^25.0.1"
-  }
+  },
+  "type": "module"
 }
