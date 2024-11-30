@@ -31,10 +31,15 @@ jobs:
           command_timeout: 30m
           script: | 
             echo "Connecting to ${{ env.HOST }}..."
-            echo "${{ env.PASSWORD }}"
             cd docker-app/Yayasan-Chill-Guy
-            echo "Pulling latest changes from GitHub..."
+            echo "Fetching all branches..."
+            git fetch origin
+            echo "Checking out to branch dev/davey..."
+            git checkout dev/davey
+            echo "Pulling latest changes from dev/davey..."
             git pull origin dev/davey
+            echo "Running npm install to install dependencies..."
+            npm install  # Installs dependencies
             echo "Rebuilding Docker image..."
             docker build -t dvy4/basiccalculator2 .
             echo "Stopping old container..."
@@ -43,3 +48,4 @@ jobs:
             docker rm $(docker ps -a -q --filter ancestor=dvy4/basiccalculator2) || true
             echo "Starting new container..."
             docker run -d -p 80:80 dvy4/basiccalculator2
+
