@@ -1,0 +1,33 @@
+name: Deploy Website
+
+on:
+  push:
+    branches:
+      - dev/davey  # Trigger deployment on pushes to the branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up SSH for communication with the Droplet
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAszYGLcQlNI6siEDbnPCn4NIyXH21vfUACNp4Tpcxj6 dvy-window@DESKTOP-D0JDIJV"
+
+      # Step 3: Pull the latest changes from the Git repository on the Droplet
+      - name: Pull latest code and rebuild Docker container
+        run: |
+          ssh -o StrictHostKeyChecking=no username@your-droplet-ip << 'EOF'
+            cd my-docker-app/Yayasan-Chill-Guy
+            git pull origin main  # Pull the latest changes
+            docker build -t my-website .  # Rebuild Docker image
+            docker stop $(docker ps -q --filter ancestor=my-website)  # Stop the old container
+            docker rm $(docker ps -a -q --filter ancestor=my-website)  # Remove old container
+            docker run -d -p 80:80 my-website  # Start the new container
+          EOF
