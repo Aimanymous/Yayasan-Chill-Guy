@@ -26,7 +26,7 @@ jobs:
         with:
           host: ${{ env.HOST }}
           username: ${{ env.USERNAME }}
-          key: ${{ env.PASSWORD }}
+          password: ${{ env.PASSWORD }}
           port: ${{ env.PORT }}
           command_timeout: 30m
           script: | 
