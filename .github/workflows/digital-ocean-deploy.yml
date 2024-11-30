@@ -8,7 +8,7 @@ on:
 env:
   USERNAME: root
   HOST : '134.209.112.240'
-  PORT : 80
+  PORT : 22
   PASSWORD : T3stinGA
 
 jobs:
