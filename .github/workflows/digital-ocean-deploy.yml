@@ -6,6 +6,9 @@ on:
       - dev/davey  # Trigger deployment on pushes to the branch
 
 env:
+  USERNAME: root
+  HOST : '147.182.216.94'
+  PORT : 80
   DUMMY_SSH_KEY : "-----BEGIN OPENSSH PRIVATE KEY-----b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABDn1AS86r8P7NbFAVWCN6n/AAAAGAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIAszYGLcQlNI6siEDbnPCn4NIyXH21vfUACNp4Tpcxj6AAAAoHfpTr3BcHJ8clQEzkFoj1/NbBYs2UB10qQnzq0AU4A2h2NzDKSQ5+eVzNKY7PAo6w3mP7FNrPxcddu4U9PRxUgmc3GhZ9J2rybZxDurJZcAckPyHhhczLCVF6yIRfm5EPUDGQOem/yVTuXj4B7RamMzddZIYkwd4c4ASpL5ds7ay/F68Km5pKpVb0JswFyog3AK0eyuNelFG1u/GLXIf2U=-----END OPENSSH PRIVATE KEY-----"
 
 jobs:
@@ -19,9 +22,15 @@ jobs:
 
       # Step 2: Set up SSH for communication with the Droplet
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
+        uses: appleboy/ssh-action@v0.1.10
         with:
-          ssh-private-key: ${{ env.DUMMY_SSH_KEY }}
+          host: ${{ env.HOST }}
+          username: ${{ env.USERNAME }}
+          key: ${{ env.DUMMY_SSH_KEY }}
+          port: ${{ env.PORT }}
+          command_timeout: 30m
+          script: | 
+            echo "Connecting to ${{ env.HOST }}..."
 
       # Step 3: Pull the latest changes from the Git repository on the Droplet
       - name: Pull latest code and rebuild Docker container
