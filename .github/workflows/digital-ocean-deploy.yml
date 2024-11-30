@@ -38,8 +38,8 @@ jobs:
             git checkout dev/davey
             echo "Pulling latest changes from dev/davey..."
             git pull origin dev/davey
-            echo "Running npm install to install dependencies..."
-            npm install  # Installs dependencies
+            # echo "Running npm install to install dependencies..."
+            # npm install  # Installs dependencies
             echo "Rebuilding Docker image..."
             docker build -t dvy4/basiccalculator .
             echo "Stopping old container..."
