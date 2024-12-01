@@ -5,17 +5,19 @@ FROM node:18 AS test-stage
 WORKDIR /app
 
 # Copy package.json and package-lock.json for installing Jest and other dependencies
-COPY package*.json ./
+COPY package*.json ./ 
 
 # Install dependencies (for testing purposes only)
 RUN npm install --only=dev
 
-# Copy the rest of the app source code
+# Copy the rest of the app source code, including the test files and metricsCollector.cjs
 COPY . .
 
-# Run Jest tests
-RUN npm i --save-dev jest
+# Run Jest tests (assuming the tests are written as you showed in script.test.js)
 RUN npm run test
+
+# Collect metrics after the tests (using the metricsCollector.cjs)
+RUN node ./metricsCollector.cjs
 
 # Stage 2: Production Stage
 FROM nginx:alpine AS production-stage
@@ -35,7 +37,9 @@ COPY script.js /usr/share/nginx/html/
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=test-stage /app    .
+# Copy the metrics file from the test stage
+COPY --from=test-stage /app/metrics.txt /usr/share/nginx/html/metrics.txt
+
 # Expose port from environment variable
 EXPOSE 80
 

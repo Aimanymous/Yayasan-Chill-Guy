@@ -1,0 +1,29 @@
+{
+    "dashboard": {
+      "uid": "nodejs-dashboard",
+      "title": "Node.js Dashboard",
+      "panels": [
+        {
+          "title": "HTTP Requests",
+          "type": "graph",
+          "targets": [
+            {
+              "expr": "rate(http_requests_total[5m])",
+              "interval": "",
+              "legendFormat": "{{method}}",
+              "refId": "A"
+            }
+          ],
+          "xaxis": {
+            "mode": "time"
+          },
+          "yaxes": [
+            {
+              "format": "short"
+            }
+          ]
+        }
+      ]
+    }
+  }
+  
