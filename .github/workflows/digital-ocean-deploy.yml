@@ -47,8 +47,8 @@ jobs:
 
             # run jest testing"
             echo "Running jest tests..."
-            npm install -g jest && jest --verbose --logHeapUsage
-            
+            npm test
+
             echo "Rebuilding Docker image..."
             docker build -t dvy4/basiccalculator .
 
