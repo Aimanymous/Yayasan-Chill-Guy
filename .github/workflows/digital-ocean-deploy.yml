@@ -47,6 +47,7 @@ jobs:
 
             # run jest testing"
             echo "Running jest tests..."
+            npm install
             npm test
 
             echo "Rebuilding Docker image..."
