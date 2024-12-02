@@ -3,7 +3,7 @@ version: "3.8"  # Optional: remove if you want to avoid using a version
 services:
   app:
     build:
-      context: ./app  # Specify the path to the ./app folder as build context
+      context: ./App  # Specify the path to the ./app folder as build context
       dockerfile: dockerfile  # Specify the Dockerfile in ./app folder (make sure it's named 'Dockerfile' or specify the correct name)
     container_name: app
     ports:
