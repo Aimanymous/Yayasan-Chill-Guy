@@ -6,7 +6,7 @@ on:
 
 env:
   DOCKER_HUB_USERNAME: aimanahmad0004
-  REPOSITORY_NAME: Monitor
+  REPOSITORY_NAME: monitor
   PROJECT_ID: chillguys
   REGION: asia-southeast1
   NODE_ENV: production
