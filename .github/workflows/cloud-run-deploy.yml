@@ -26,31 +26,30 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version || echo "Docker Compose installation failed"
 
+      # Login to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ env.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Debug Docker Compose Build
-        run: |
-          docker-compose -f docker-compose.yml config  # Check if the final config is correct
-          docker-compose -f docker-compose.yml build --no-cache  # Force rebuild
-
+      # Build and push Docker images for each service in docker-compose.yml
       - name: Build and push Docker images
         run: |
-          docker-compose -f docker-compose.yml build
-          docker-compose -f docker-compose.yml push
+          docker-compose -f docker-compose.yml build  # Build images for all services
+          docker-compose -f docker-compose.yml push   # Push the images to Docker Hub
 
+      # Google Auth for GCP
       - name: Google Auth
         id: auth
         uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
+      # Deploy each service to Cloud Run
       - name: Deploy to Cloud Run
         run: |
-          services=$(docker-compose config --services)
+          services=$(docker-compose -f docker-compose.yml config --services)  # Get list of services from docker-compose
           for service in $services; do
             docker_image="${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}-${service}:${{ github.sha }}"
             gcloud run deploy $service \
