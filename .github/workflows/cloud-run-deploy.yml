@@ -19,12 +19,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Install Docker Compose (if needed, but we're using build-push-action)
-      - name: Install Docker Compose
+      # Install Docker and Docker Compose
+      - name: Install Docker and Docker Compose
         run: |
+          sudo curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version || echo "Docker Compose installation failed"
+          docker --version
+          docker-compose --version
 
       # Login to Docker Hub
       - name: Login to Docker Hub
@@ -33,14 +36,12 @@ jobs:
           username: ${{ env.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      # Build and push Docker images for each service in docker-compose.yml
+      # Build and push Docker images using docker-compose
       - name: Build and push Docker images
-        uses: docker/build-push-action@v5
-        with:
-          context: .  # Set context to the root directory (or change if Dockerfile is in a subdirectory)
-          push: true
-          tags: ${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
-          file: ./Dockerfile  # Specify path to Dockerfile if it's in a subfolder like ./app/Dockerfile
+        run: |
+          # Build images and push to Docker Hub using docker-compose
+          docker-compose -f docker-compose.yml build  # Builds all services
+          docker-compose -f docker-compose.yml push   # Pushes the images to Docker Hub
 
       # Google Auth for GCP
       - name: Google Auth
@@ -49,19 +50,19 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
-      # Deploy each service to Cloud Run
+      # Deploy to Cloud Run for each service in the docker-compose.yml file
       - name: Deploy to Cloud Run
         run: |
           # Get list of services from docker-compose.yml
           services=$(docker-compose -f docker-compose.yml config --services)
-          
+
           for service in $services; do
             # Build docker image name
             docker_image="${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}-${service}:${{ github.sha }}"
 
-            # Deploy to Cloud Run
+            # Deploy the service to Cloud Run
             gcloud run deploy $service \
-              --image $docker_image \
+              --image docker.io/$docker_image \
               --region ${{ env.REGION }} \
               --allow-unauthenticated \
               --platform managed \
