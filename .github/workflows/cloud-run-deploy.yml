@@ -50,6 +50,11 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
+      # Set up Docker authentication for Cloud Run if Docker Hub is private
+      - name: Set up Docker authentication for Cloud Run
+        run: |
+          echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ env.DOCKER_HUB_USERNAME }} --password-stdin
+
       # Deploy to Cloud Run for each service in the docker-compose.yml file
       - name: Deploy to Cloud Run
         run: |
@@ -59,6 +64,9 @@ jobs:
           for service in $services; do
             # Build docker image name
             docker_image="${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}-${service}:${{ github.sha }}"
+
+            # Log the image name for debugging
+            echo "Docker image: $docker_image"
 
             # Deploy the service to Cloud Run
             gcloud run deploy $service \
