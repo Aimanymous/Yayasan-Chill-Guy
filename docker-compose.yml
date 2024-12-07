@@ -1,39 +1,42 @@
 services:
   app:
     build:
-      context: ./App  # Specify the path to the ./app folder as build context
-      dockerfile: dockerfile  # Specify the Dockerfile in ./app folder (make sure it's named 'Dockerfile' or specify the correct name)
-    container_name: app
+      context: ./App
+      dockerfile: dockerfile
+    image: ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA}
+    container_name: appp
     ports:
-      - "8080:80"  # Expose the app and the /metrics endpoint
+      - "8080:80"
     volumes:
-      - ./app:/app  # Mount the local ./app folder to /app in the container
+      - ./app:/app
     networks:
       - monitoring
 
   prometheus:
     build:
       context: ./prometheus
-    container_name: prometheus
+    image: ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA}
+    container_name: prometheusu
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml  # Link to Prometheus configuratio
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
-      - "9090:9090"  # Expose Prometheus UI on port 9090
+      - "9090:9090"
     networks:
       - monitoring
 
   grafana:
     build:
       context: ./grafana
-    container_name: grafana
+    image: ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:grafana-${GITHUB_SHA}
+    container_name: grafanaa
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin  # Set Grafana admin password
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
-      - "3000:3000"  # Expose Grafana UI on port 3000
+      - "3000:3000"
     networks:
       - monitoring
     depends_on:
-      - prometheus  # Ensure Grafana starts after Prometheus
+      - prometheus
 
 networks:
   monitoring:

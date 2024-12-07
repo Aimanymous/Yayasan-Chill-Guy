@@ -46,18 +46,11 @@ jobs:
           echo "Building images..."
           docker-compose -f docker-compose.yml build --no-cache
           
-          echo "Tagging images..."
-          docker tag appp ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA}
-          docker tag prometheusu ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA}
-          docker tag grafanaa ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:grafana-${GITHUB_SHA}
-          
           echo "Pushing images to Docker Hub..."
-          docker push ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA}
-          docker push ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA}
-        
+          docker-compose push
+          
           echo "Final images in Docker:"
           docker images
-
       # Google Auth for GCP
       - name: Google Auth
         id: auth
