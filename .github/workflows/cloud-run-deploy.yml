@@ -71,35 +71,41 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
-      # Deploy to Cloud Run for each service
-      - name: Deploy to Cloud Run
+
+      # Setup Google Cloud CLI
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # Configure Docker to use gcloud as credential helper
+      - name: Configure Docker for GCP
+        run: gcloud auth configure-docker
+
+      # Deploy app service to Cloud Run
+      - name: Deploy App to Cloud Run
         run: |
-          # Deploy app service
-          echo "Deploying app service..."
-          gcloud run deploy app \
-            --image docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:app-${{ github.sha }} \
-            --region ${{ env.REGION }} \
-            --allow-unauthenticated \
+          gcloud run deploy app-service \
+            --image ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA} \
             --platform managed \
+            --region ${{ env.REGION }} \
             --project ${{ env.PROJECT_ID }} \
-            --set-env-vars NODE_ENV=${{ env.NODE_ENV }}
+            --allow-unauthenticated
 
-          # Deploy prometheus service
-          echo "Deploying prometheus service..."
-          gcloud run deploy prometheus \
-            --image docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:prometheus-${{ github.sha }} \
-            --region ${{ env.REGION }} \
-            --allow-unauthenticated \
+      # Deploy Prometheus to Cloud Run
+      - name: Deploy Prometheus to Cloud Run
+        run: |
+          gcloud run deploy prometheus-service \
+            --image ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA} \
             --platform managed \
+            --region ${{ env.REGION }} \
             --project ${{ env.PROJECT_ID }} \
-            --set-env-vars NODE_ENV=${{ env.NODE_ENV }}
+            --allow-unauthenticated
 
-          # Deploy grafana service
-          echo "Deploying grafana service..."
-          gcloud run deploy grafana \
-            --image docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:grafana-${{ github.sha }} \
-            --region ${{ env.REGION }} \
-            --allow-unauthenticated \
+      # Deploy Grafana to Cloud Run
+      - name: Deploy Grafana to Cloud Run
+        run: |
+          gcloud run deploy grafana-service \
+            --image ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:grafana-${GITHUB_SHA} \
             --platform managed \
+            --region ${{ env.REGION }} \
             --project ${{ env.PROJECT_ID }} \
-            --set-env-vars NODE_ENV=${{ env.NODE_ENV }}
+            --allow-unauthenticated
