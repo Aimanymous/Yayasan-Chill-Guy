@@ -12,7 +12,7 @@ env:
   PROJECT_ID: chillguys
   REGION: asia-southeast1
   SERVICE_NAME: calculator-app
-  PORT: 80
+  PORT: 8080
   NODE_ENV: production
 
 jobs:
