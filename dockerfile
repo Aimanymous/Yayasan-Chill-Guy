@@ -2,7 +2,7 @@
 FROM nginx:alpine
 
 # Set environment variables
-ARG PORT=80
+ARG PORT=8080
 ENV PORT=$PORT
 
 # Remove default nginx static assets
