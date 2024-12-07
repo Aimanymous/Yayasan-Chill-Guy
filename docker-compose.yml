@@ -16,7 +16,7 @@ services:
       context: ./prometheus
     container_name: prometheusu
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml  # Link to Prometheus configuration
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml  # Link to Prometheus configuratio
     ports:
       - "9090:9090"  # Expose Prometheus UI on port 9090
     networks:
