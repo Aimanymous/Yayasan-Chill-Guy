@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: ./App  # Specify the path to the ./app folder as build context
-      dockerfile: ./App/dockerfile  # Specify the Dockerfile in ./app folder (make sure it's named 'Dockerfile' or specify the correct name)
+      dockerfile: dockerfile  # Specify the Dockerfile in ./app folder (make sure it's named 'Dockerfile' or specify the correct name)
     container_name: app
     ports:
       - "8080:80"  # Expose the app and the /metrics endpoint
