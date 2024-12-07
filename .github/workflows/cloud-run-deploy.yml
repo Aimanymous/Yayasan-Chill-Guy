@@ -11,8 +11,8 @@ env:
   REPOSITORY_NAME: test
   PROJECT_ID: chillguys
   REGION: asia-southeast1
-  SERVICE_NAME: calculator-apps
-  PORT: 8080
+  SERVICE_NAME: calculator-app
+  PORT: 80
   NODE_ENV: production
 
 jobs:
@@ -50,4 +50,4 @@ jobs:
           image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:${{ github.sha }}
           env_vars: |
             NODE_ENV=${{ env.NODE_ENV }}
-          flags: '--allow-unauthenticated'
+          flags: '--allow-unauthenticated --port=80'
