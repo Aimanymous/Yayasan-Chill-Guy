@@ -70,7 +70,7 @@ jobs:
       - name: Deploy App to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: app-service
+          service: app
           region: ${{ env.REGION }}
           image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:app-${{ github.sha }}
           env_vars: |
@@ -81,7 +81,7 @@ jobs:
       - name: Deploy Prometheus to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: prometheus-service
+          service: prometheus
           region: ${{ env.REGION }}
           image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:prometheus-${{ github.sha }}
           flags: '--allow-unauthenticated'
@@ -90,7 +90,7 @@ jobs:
       - name: Deploy Grafana to Cloud Run
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: grafana-service
+          service: grafana
           region: ${{ env.REGION }}
           image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:grafana-${{ github.sha }}
           flags: '--allow-unauthenticated'
