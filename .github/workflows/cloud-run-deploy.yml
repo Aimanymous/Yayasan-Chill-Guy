@@ -43,25 +43,18 @@ jobs:
           DOCKER_HUB_USERNAME: ${{ env.DOCKER_HUB_USERNAME }}
           REPOSITORY_NAME: ${{ env.REPOSITORY_NAME }}
         run: |
-          echo "Current images in Docker:"
-          docker images
-          
           echo "Building images..."
           docker-compose -f docker-compose.yml build --no-cache
           
-          echo "Images after build:"
-          docker images
-          
           echo "Tagging images..."
-          docker tag ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA} ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA}
-          docker tag ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA} ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA}
-          docker tag ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:grafana-${GITHUB_SHA} ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:grafana-${GITHUB_SHA}
+          docker tag appp ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA}
+          docker tag prometheusu ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA}
+          docker tag grafanaa ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:grafana-${GITHUB_SHA}
           
           echo "Pushing images to Docker Hub..."
           docker push ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA}
           docker push ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA}
-          docker push ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:grafana-${GITHUB_SHA}
-          
+        
           echo "Final images in Docker:"
           docker images
 
