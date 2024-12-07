@@ -59,7 +59,7 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           # Get list of services from docker-compose.yml
-          services=$(docker-compose -f docker-compose.yml config --services)
+          services=$(docker-compose -f docker-compose.yml config --services | grep -v "^\s*#" | tr -d '\n')
 
           for service in $services; do
             # Build docker image name
