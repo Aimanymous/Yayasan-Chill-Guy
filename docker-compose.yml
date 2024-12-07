@@ -4,7 +4,7 @@ services:
       context: ./App
       dockerfile: dockerfile
     image: ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA}
-    container_name: appp
+    container_name: app
     ports:
       - "8080:80"
     volumes:
@@ -16,7 +16,7 @@ services:
     build:
       context: ./prometheus
     image: ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA}
-    container_name: prometheusu
+    container_name: prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
@@ -28,7 +28,7 @@ services:
     build:
       context: ./grafana
     image: ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:grafana-${GITHUB_SHA}
-    container_name: grafanaa
+    container_name: grafana
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
