@@ -82,30 +82,29 @@ jobs:
 
       # Deploy app service to Cloud Run
       - name: Deploy App to Cloud Run
-        run: |
-          gcloud run deploy app-service \
-            --image ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:app-${GITHUB_SHA} \
-            --platform managed \
-            --region ${{ env.REGION }} \
-            --project ${{ env.PROJECT_ID }} \
-            --allow-unauthenticated
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: app-service
+          region: ${{ env.REGION }}
+          image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:app-${{ github.sha }}
+          env_vars: |
+            NODE_ENV=${{ env.NODE_ENV }}
+          flags: '--allow-unauthenticated'
 
       # Deploy Prometheus to Cloud Run
       - name: Deploy Prometheus to Cloud Run
-        run: |
-          gcloud run deploy prometheus-service \
-            --image ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:prometheus-${GITHUB_SHA} \
-            --platform managed \
-            --region ${{ env.REGION }} \
-            --project ${{ env.PROJECT_ID }} \
-            --allow-unauthenticated
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: prometheus-service
+          region: ${{ env.REGION }}
+          image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:prometheus-${{ github.sha }}
+          flags: '--allow-unauthenticated'
 
       # Deploy Grafana to Cloud Run
       - name: Deploy Grafana to Cloud Run
-        run: |
-          gcloud run deploy grafana-service \
-            --image ${DOCKER_HUB_USERNAME}/${REPOSITORY_NAME}:grafana-${GITHUB_SHA} \
-            --platform managed \
-            --region ${{ env.REGION }} \
-            --project ${{ env.PROJECT_ID }} \
-            --allow-unauthenticated
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: grafana-service
+          region: ${{ env.REGION }}
+          image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:grafana-${{ github.sha }}
+          flags: '--allow-unauthenticated'
