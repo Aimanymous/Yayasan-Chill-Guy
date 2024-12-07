@@ -75,7 +75,7 @@ jobs:
           image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:app-${{ github.sha }}
           env_vars: |
             NODE_ENV=${{ env.NODE_ENV }}
-          flags: '--allow-unauthenticated --port=8080'
+          flags: '--allow-unauthenticated --port=80'
 
       # Deploy Prometheus to Cloud Run
       - name: Deploy Prometheus to Cloud Run
