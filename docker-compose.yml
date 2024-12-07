@@ -3,7 +3,7 @@ services:
     build:
       context: ./App  # Specify the path to the ./app folder as build context
       dockerfile: dockerfile  # Specify the Dockerfile in ./app folder (make sure it's named 'Dockerfile' or specify the correct name)
-    container_name: appp
+    container_name: app
     ports:
       - "8080:80"  # Expose the app and the /metrics endpoint
     volumes:
@@ -14,7 +14,7 @@ services:
   prometheus:
     build:
       context: ./prometheus
-    container_name: prometheusu
+    container_name: prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml  # Link to Prometheus configuratio
     ports:
@@ -25,7 +25,7 @@ services:
   grafana:
     build:
       context: ./grafana
-    container_name: grafanaa
+    container_name: grafana
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin  # Set Grafana admin password
     ports:
