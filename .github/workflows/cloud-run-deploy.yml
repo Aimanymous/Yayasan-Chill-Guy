@@ -11,7 +11,7 @@ env:
   REPOSITORY_NAME: test
   PROJECT_ID: chillguys
   REGION: asia-southeast1
-  SERVICE_NAME: calculator-app
+  SERVICE_NAME: calculator-apps
   PORT: 8080
   NODE_ENV: production
 
