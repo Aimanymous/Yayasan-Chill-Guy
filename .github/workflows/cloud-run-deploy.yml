@@ -75,7 +75,7 @@ jobs:
           image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:app-${{ github.sha }}
           env_vars: |
             NODE_ENV=${{ env.NODE_ENV }}
-          flags: '--allow-unauthenticated'
+          flags: '--allow-unauthenticated --port=8080'
 
       # Deploy Prometheus to Cloud Run
       - name: Deploy Prometheus to Cloud Run
@@ -84,7 +84,7 @@ jobs:
           service: prometheus
           region: ${{ env.REGION }}
           image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:prometheus-${{ github.sha }}
-          flags: '--allow-unauthenticated'
+          flags: '--allow-unauthenticated --port=9090'
 
       # Deploy Grafana to Cloud Run
       - name: Deploy Grafana to Cloud Run
@@ -93,4 +93,4 @@ jobs:
           service: grafana
           region: ${{ env.REGION }}
           image: docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}:grafana-${{ github.sha }}
-          flags: '--allow-unauthenticated'
+          flags: '--allow-unauthenticated --port=3000'
