@@ -41,7 +41,7 @@ jobs:
         env:
           GITHUB_SHA: ${{ github.sha }}
         run: |
-          # Build images and push to Docker Hub using docker-compose
+          echo "Building and pushing images..."
           docker-compose -f docker-compose.yml build
           docker-compose -f docker-compose.yml push
 
@@ -52,30 +52,119 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
-      # Set up Docker authentication for Cloud Run if Docker Hub is private
-      - name: Set up Docker authentication for Cloud Run
-        run: |
-          echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ env.DOCKER_HUB_USERNAME }} --password-stdin
-
-      # Deploy to Cloud Run for each service in the docker-compose.yml file
+      # Deploy to Cloud Run for each service
       - name: Deploy to Cloud Run
         run: |
-          # Get list of services from docker-compose.yml
-          services=$(docker-compose -f docker-compose.yml config --services | grep -v "^\s*#" | tr -d '\n')
+          # Deploy app service
+          echo "Deploying app service..."
+          gcloud run deploy app \
+            --image docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}-app:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --allow-unauthenticated \
+            --platform managed \
+            --project ${{ env.PROJECT_ID }} \
+            --set-env-vars NODE_ENV=${{ env.NODE_ENV }}
 
-          for service in $services; do
-            # Build docker image name
-            docker_image="${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}-${service}:${{ github.sha }}"
+          # Deploy prometheus service
+          echo "Deploying prometheus service..."
+          gcloud run deploy prometheus \
+            --image docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}-prometheus:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --allow-unauthenticated \
+            --platform managed \
+            --project ${{ env.PROJECT_ID }} \
+            --set-env-vars NODE_ENV=${{ env.NODE_ENV }}
 
-            # Log the image name for debugging
-            echo "Docker image: $docker_image"
+          # Deploy grafana service
+          echo "Deploying grafana service..."
+          gcloud run deploy grafana \
+            --image docker.io/${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}-grafana:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --allow-unauthenticated \
+            --platform managed \
+            --project ${{ env.PROJECT_ID }} \
+            --set-env-vars NODE_ENV=${{ env.NODE_ENV }}
 
-            # Deploy the service to Cloud Run
-            gcloud run deploy $service \
-              --image docker.io/$docker_image \
-              --region ${{ env.REGION }} \
-              --allow-unauthenticated \
-              --platform managed \
-              --project ${{ env.PROJECT_ID }} \
-              --set-env-vars NODE_ENV=${{ env.NODE_ENV }}
-          done
+
+
+# name: Deploy Multi-Service App to Cloud Run
+
+# on:
+#   push:
+#     branches: [ "monitoring" ]
+
+# env:
+#   DOCKER_HUB_USERNAME: aimanahmad0004
+#   REPOSITORY_NAME: monitor
+#   PROJECT_ID: chillguys
+#   REGION: asia-southeast1
+#   NODE_ENV: production
+
+# jobs:
+#   deploy-cloud-run:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       # Install Docker and Docker Compose
+#       - name: Install Docker and Docker Compose
+#         run: |
+#           sudo curl -fsSL https://get.docker.com -o get-docker.sh
+#           sudo sh get-docker.sh
+#           sudo curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#           sudo chmod +x /usr/local/bin/docker-compose
+#           docker --version
+#           docker-compose --version
+
+#       # Login to Docker Hub
+#       - name: Login to Docker Hub
+#         uses: docker/login-action@v3
+#         with:
+#           username: ${{ env.DOCKER_HUB_USERNAME }}
+#           password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+#       # Build and push Docker images using docker-compose
+#       - name: Build and push Docker images
+#         env:
+#           GITHUB_SHA: ${{ github.sha }}
+#         run: |
+#           # Build images and push to Docker Hub using docker-compose
+#           docker-compose -f docker-compose.yml build
+#           docker-compose -f docker-compose.yml push
+
+#       # Google Auth for GCP
+#       - name: Google Auth
+#         id: auth
+#         uses: google-github-actions/auth@v2
+#         with:
+#           credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+#       # Set up Docker authentication for Cloud Run if Docker Hub is private
+#       - name: Set up Docker authentication for Cloud Run
+#         run: |
+#           echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u ${{ env.DOCKER_HUB_USERNAME }} --password-stdin
+
+#       # Deploy to Cloud Run for each service in the docker-compose.yml file
+#       - name: Deploy to Cloud Run
+#         run: |
+#           # Get list of services from docker-compose.yml
+#           services=$(docker-compose -f docker-compose.yml config --services | grep -v "^\s*#" | tr -d '\n')
+
+#           for service in $services; do
+#             # Build docker image name
+#             docker_image="${{ env.DOCKER_HUB_USERNAME }}/${{ env.REPOSITORY_NAME }}-${service}:${{ github.sha }}"
+
+#             # Log the image name for debugging
+#             echo "Docker image: $docker_image"
+
+#             # Deploy the service to Cloud Run
+#             gcloud run deploy $service \
+#               --image docker.io/$docker_image \
+#               --region ${{ env.REGION }} \
+#               --allow-unauthenticated \
+#               --platform managed \
+#               --project ${{ env.PROJECT_ID }} \
+#               --set-env-vars NODE_ENV=${{ env.NODE_ENV }}
+#           done
